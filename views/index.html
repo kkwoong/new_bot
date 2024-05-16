@@ -1,32 +1,53 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cloudtype - Node.js</title>
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@2.51.3/dist/full.css" rel="stylesheet" type="text/css" />
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2/dist/tailwind.min.css" rel="stylesheet" type="text/css" />
-    <link rel="icon" href="/images/favicon.ico">
+    <title>글 작성</title>
 </head>
 <body>
-    <div class="hero min-h-screen bg-base-200">
-        <div class="hero-content flex-col lg:flex-row-reverse">
-          <img src="/images/node.png" class="w-36 rounded-lg md:ml-5 lg:ml-5" />
-          <div>
-            <h1 class="text-5xl font-bold">Node.js</h1>
-            <p class="py-6">클라우드타입에서 배포한 Node.js 어플리케이션입니다.</p>
-            <button type="button" onclick="window.open('https://github.com/cloudtype-examples/node-express')" class="btn btn-outline rounded">
-              GitHub
-            </button>
-            <button type="button" onclick="window.open('https://docs.cloudtype.io/')" class="btn btn-outline rounded">
-              Docs
-            </button>
-            <button type="button" onclick="window.open('https://discord.gg/U7HX4BA6hu')" class="btn btn-outline rounded">
-              Discord
-            </button>            
-          </div>
-        </div>
-      </div>
+    <h1>글 작성하기</h1>
+    <form id="postForm">
+        <label for="title">제목:</label><br>
+        <input type="text" id="title" name="title"><br>
+        <label for="content">내용:</label><br>
+        <textarea id="content" name="content"></textarea><br><br>
+        <button type="button" onclick="submitForm()">작성 완료</button> <!-- 수정된 부분 -->
+    </form>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function submitForm() {
+            var title = $('#title').val();
+            var content = $('#content').val();
+
+            // 데이터가 비어있는지 확인
+            if (!title.trim() || !content.trim()) {
+                alert('제목과 내용을 모두 입력해주세요.');
+                return;
+            }
+
+            var formData = {
+                title: title,
+                content: content
+            };
+
+            // 백엔드 서버로 데이터 전송
+            $.ajax({
+                type: 'POST',
+                url: 'http://localhost:3000/post',
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                success: function(response) {
+                    alert('글이 성공적으로 전송되었습니다!');
+                    // 성공 시 추가 작업 수행
+                },
+                error: function(err) {
+                    console.error('글 전송 중 오류 발생:', err);
+                    alert('글 전송 중 오류가 발생했습니다. 다시 시도해주세요.');
+                }
+            });
+        }
+    </script>
 </body>
 </html>
